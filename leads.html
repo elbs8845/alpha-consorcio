@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Alpha | Leads</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+    }
+
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background: #111827;
+      color: #fff;
+      position: fixed;
+      padding-top: 20px;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px 20px;
+      color: #d1d5db;
+      text-decoration: none;
+    }
+
+    .sidebar a:hover {
+      background: #1f2937;
+      color: #fff;
+    }
+
+    .content {
+      margin-left: 220px;
+      padding: 30px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    th {
+      background: #111827;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Alpha</h2>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="leads.html">Leads</a>
+    <a href="#">Agendamentos</a>
+    <a href="#">Vendas</a>
+    <a href="#">Relatórios</a>
+    <a href="index.html">Sair</a>
+  </div>
+
+  <div class="content">
+    <h1>Cadastro de Leads</h1>
+
+    <div class="card">
+      <input type="text" id="nome" placeholder="Nome do Lead">
+      <input type="text" id="telefone" placeholder="Telefone">
+      <select id="origem">
+        <option value="">Origem</option>
+        <option>WhatsApp</option>
+        <option>Instagram</option>
+        <option>Indicação</option>
+        <option>Facebook</option>
+      </select>
+      <select id="status">
+        <option>Novo</option>
+        <option>Em contato</option>
+        <option>Agendado</option>
+        <option>Vendido</option>
+      </select>
+
+      <button onclick="salvarLead()">Salvar Lead</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Telefone</th>
+          <th>Origem</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="listaLeads"></tbody>
+    </table>
+  </div>
+
+  <script>
+    let leads = JSON.parse(localStorage.getItem("leads")) || [];
+
+    function salvarLead() {
+      const nome = document.getElementById("nome").value;
+      const telefone = document.getElementById("telefone").value;
+      const origem = document.getElementById("origem").value;
+      const status = document.getElementById("status").value;
+
+      if (!nome || !telefone) {
+        alert("Preencha nome e telefone");
+        return;
+      }
+
+      leads.push({ nome, telefone, origem, status });
+      localStorage.setItem("leads", JSON.stringify(leads));
+
+      limparCampos();
+      listarLeads();
+    }
+
+    function listarLeads() {
+      const lista = document.getElementById("listaLeads");
+      lista.innerHTML = "";
+
+      leads.forEach(lead => {
+        lista.innerHTML += `
+          <tr>
+            <td>${lead.nome}</td>
+            <td>${lead.telefone}</td>
+            <td>${lead.origem}</td>
+            <td>${lead.status}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function limparCampos() {
+      document.getElementById("nome").value = "";
+      document.getElementById("telefone").value = "";
+      document.getElementById("origem").value = "";
+      document.getElementById("status").value = "Novo";
+    }
+
+    listarLeads();
+  </script>
+
+</body>
+</html>
